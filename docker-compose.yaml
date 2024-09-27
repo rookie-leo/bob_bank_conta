@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  mysql:
+    image:  mysql:8.0
+    container_name: conta-db
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=contadb
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=admin
+    ports:
+      - "3305:3306"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql

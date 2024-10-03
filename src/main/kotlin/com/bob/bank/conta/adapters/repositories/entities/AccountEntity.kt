@@ -6,7 +6,7 @@ import java.math.BigDecimal
 
 @Entity(name = "conta")
 @Access(AccessType.FIELD)
-data class AccountEntity(
+open class AccountEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,

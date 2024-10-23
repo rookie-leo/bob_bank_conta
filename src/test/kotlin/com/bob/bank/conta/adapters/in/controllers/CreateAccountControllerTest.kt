@@ -29,19 +29,21 @@ class CreateAccountControllerTest {
     @MockBean
     private lateinit var createAccountInputPort: CreateAccountUseCase
 
+    private val customerId: String = "d5ed3762-025c-4673-baf1-edba9b257122";
+
     @Test
     fun createAccount_should_return_created_status() {
         val request = getAccountRequest()
         val accounts = getCreatedAccounts()
 
-        `when`(createAccountInputPort.createAccount(request)).thenReturn(accounts)
+        `when`(createAccountInputPort.createAccount(customerId)).thenReturn(accounts)
 
         mockMvc.perform(post("/api/v1/accounts/create")
             .contentType(APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isCreated)
 
-        verify(createAccountInputPort, times(1)).createAccount(request)
+        verify(createAccountInputPort, times(1)).createAccount(customerId)
     }
 
     @Test
@@ -53,21 +55,19 @@ class CreateAccountControllerTest {
             .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest)
 
-        verify(createAccountInputPort, times(0)).createAccount(request)
+        verify(createAccountInputPort, times(0)).createAccount(request.customerId)
     }
 
     @Test
     fun createAccount_should_return_internalServerError_status() {
-        val request = getAccountRequest()
-
-        `when`(createAccountInputPort.createAccount(request)).thenThrow(RuntimeException("Não foi possivel criar a conta!"))
+        `when`(createAccountInputPort.createAccount(customerId)).thenThrow(RuntimeException("Não foi possivel criar a conta!"))
 
         mockMvc.perform(post("/api/v1/accounts/create")
             .contentType(APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(request)))
+            .content(objectMapper.writeValueAsString(customerId)))
             .andExpect(status().isInternalServerError)
 
-        verify(createAccountInputPort, times(1)).createAccount(request)
+        verify(createAccountInputPort, times(1)).createAccount(customerId)
     }
 
     private fun getCreatedAccounts(): List<Account> {

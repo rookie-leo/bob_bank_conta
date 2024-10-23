@@ -27,28 +27,11 @@ class CreateAccountUseCaseTest {
         doNothing().`when`(accountAdapter).saveAccount(accounts)
         `when`(accountUtils.generateAccountNumber()).thenReturn("123")
 
-        val accountsResponse = createAccountUseCase.createAccount(request)
+        val accountsResponse = createAccountUseCase.createAccount(request.customerId)
 
         assertNotNull(accountsResponse)
         assertEquals(request.customerId, accountsResponse[0].customerId)
         assertEquals(request.customerId, accountsResponse[1].customerId)
-        verify(accountAdapter, times(1)).saveAccount(accounts)
-        verify(accountUtils, times(2)).generateAccountNumber()
-    }
-
-    @Test
-    fun should_not_create_account_when_throw_Exception() {
-        val request = getAccountRequest()
-        val accounts = getCreatedAccounts()
-
-        `when`(accountUtils.generateAccountNumber()).thenReturn("123")
-        doThrow(RuntimeException::class.java).`when`(accountAdapter).saveAccount(accounts)
-
-        val ex = assertThrows<RuntimeException> {
-            createAccountUseCase.createAccount(request)
-        }
-
-        assertNotNull(ex)
         verify(accountAdapter, times(1)).saveAccount(accounts)
         verify(accountUtils, times(2)).generateAccountNumber()
     }

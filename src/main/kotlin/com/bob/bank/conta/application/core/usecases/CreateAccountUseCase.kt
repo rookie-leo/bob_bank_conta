@@ -13,13 +13,13 @@ class CreateAccountUseCase(
     private val accountUtils: AccountUtils
 ): CreateAccountInputPort{
 
-    override fun createAccount(accountRequest: AccountRequest): List<Account> {
+    override fun createAccount(customerId: String): List<Account> {
         val checkingAccount = CheckingAccount(
-            customerId = accountRequest.customerId,
+            customerId = customerId,
             accountNumber = accountUtils.generateAccountNumber()
             )
         val savingsAccount = SavingsAccount(
-            customerId = accountRequest.customerId,
+            customerId = customerId,
             accountNumber = "10" + accountUtils.generateAccountNumber()
         )
         val accounts = listOf(checkingAccount, savingsAccount)
